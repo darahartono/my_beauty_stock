@@ -1,3 +1,8 @@
+
+<?php
+require_once 'auth.php';
+requireLogin();
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -13,16 +18,37 @@
     <aside class="sidebar">
       <a class="brand" href="#" aria-label="My Beauty Stock">
         <span class="brand-icon">✦</span>
-        <span><strong>MY BEAUTY</strong><small>PERSONAL STOCK</small></span>
+        <span>
+          <strong>MY BEAUTY</strong>
+          <small>PERSONAL STOCK</small>
+        </span>
       </a>
+
       <div class="nav-label">MENU</div>
+
       <nav>
-        <button class="nav-item active" data-page="home"><span class="nav-icon">⌂</span> Halaman Utama</button>
-        <button class="nav-item" data-page="form"><span class="nav-icon">＋</span> Tambah Produk</button>
+        <button class="nav-item active" data-page="home">
+          <span class="nav-icon">⌂</span> Halaman Utama
+        </button>
+
+        <button class="nav-item" data-page="form">
+          <span class="nav-icon">＋</span> Tambah Produk
+        </button>
       </nav>
+
       <div class="sidebar-bottom">
         <span class="pink-dot"></span>
-        <div><strong>Beauty inventory</strong><small>Kelola koleksi kosmetikmu</small></div>
+        <div>
+          <strong>Beauty inventory</strong>
+          <small>Kelola koleksi kosmetikmu</small>
+        </div>
+      </div>
+
+      <!-- TOMBOL LOGOUT -->
+      <div class="sidebar-logout">
+        <a href="logout.php" class="nav-item logout-item">
+          <span class="nav-icon">↪</span> Logout
+        </a>
       </div>
     </aside>
 
@@ -32,7 +58,9 @@
           <p class="eyebrow">PERSONAL INVENTORY</p>
           <h1 id="page-title">Halaman Utama</h1>
         </div>
-        <div class="topbar-tag"><span class="status-dot"></span> My Beauty Space</div>
+        <div class="topbar-tag">
+          <span class="status-dot"></span> My Beauty Space
+        </div>
       </header>
 
       <section id="home-page" class="page">
@@ -43,50 +71,102 @@
             <p>Pantau stok dan tanggal kedaluwarsa kosmetikmu dalam satu tempat.</p>
             <button class="button button-light" id="hero-add">＋ Tambah Produk</button>
           </div>
+
           <div class="welcome-decoration" aria-hidden="true">
-            <span class="orb orb-one"></span><span class="orb orb-two"></span><span class="sparkle">✦</span><span class="bottle">♡</span>
+            <span class="orb orb-one"></span>
+            <span class="orb orb-two"></span>
+            <span class="sparkle">✦</span>
+            <span class="bottle">♡</span>
           </div>
         </div>
 
         <div class="stats-grid">
           <article class="stat-card">
-            <div class="stat-top"><span>Total Produk</span><span class="stat-icon">▦</span></div>
-            <strong id="total-products">0</strong><small>Jenis kosmetik tersimpan</small>
+            <div class="stat-top">
+              <span>Total Produk</span>
+              <span class="stat-icon">▦</span>
+            </div>
+            <strong id="total-products">0</strong>
+            <small>Jenis kosmetik tersimpan</small>
           </article>
+
           <article class="stat-card">
-            <div class="stat-top"><span>Total Stok</span><span class="stat-icon">▤</span></div>
-            <strong id="total-stock">0</strong><small>Seluruh item kosmetik</small>
+            <div class="stat-top">
+              <span>Total Stok</span>
+              <span class="stat-icon">▤</span>
+            </div>
+            <strong id="total-stock">0</strong>
+            <small>Seluruh item kosmetik</small>
           </article>
+
           <article class="stat-card alert-card">
-            <div class="stat-top"><span>Stok Hampir Habis</span><span class="stat-icon">!</span></div>
-            <strong id="low-stock">0</strong><small>Produk dengan stok ≤ 3</small>
+            <div class="stat-top">
+              <span>Stok Hampir Habis</span>
+              <span class="stat-icon">!</span>
+            </div>
+            <strong id="low-stock">0</strong>
+            <small>Produk dengan stok ≤ 3</small>
           </article>
+
           <article class="stat-card expiry-card">
-            <div class="stat-top"><span>Perlu Perhatian</span><span class="stat-icon">◷</span></div>
-            <strong id="expiry-count">0</strong><small>Kedaluwarsa dalam 30 hari / lewat</small>
+            <div class="stat-top">
+              <span>Perlu Perhatian</span>
+              <span class="stat-icon">◷</span>
+            </div>
+            <strong id="expiry-count">0</strong>
+            <small>Kedaluwarsa dalam 30 hari / lewat</small>
           </article>
         </div>
 
         <section class="panel">
           <div class="panel-heading">
-            <div><p class="eyebrow">INVENTORY LIST</p><h3>Daftar Kosmetik</h3></div>
+            <div>
+              <p class="eyebrow">INVENTORY LIST</p>
+              <h3>Daftar Kosmetik</h3>
+            </div>
+
             <div class="table-tools">
-              <label class="search-box"><span>⌕</span><input type="search" id="search-input" placeholder="Cari produk..." aria-label="Cari produk"></label>
+              <label class="search-box">
+                <span>⌕</span>
+                <input type="search" id="search-input" placeholder="Cari produk..." aria-label="Cari produk">
+              </label>
+
               <select id="category-filter" aria-label="Filter kategori">
                 <option value="">Semua kategori</option>
-                <option>Skincare</option><option>Makeup</option><option>Body Care</option><option>Hair Care</option><option>Parfum</option><option>Lainnya</option>
+                <option>Skincare</option>
+                <option>Makeup</option>
+                <option>Body Care</option>
+                <option>Hair Care</option>
+                <option>Parfum</option>
+                <option>Lainnya</option>
               </select>
             </div>
           </div>
+
           <div class="table-wrap">
             <table>
-              <thead><tr><th>PRODUK</th><th>KATEGORI</th><th>STOK</th><th>KEDALUWARSA</th><th>STATUS</th><th>AKSI</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>PRODUK</th>
+                  <th>KATEGORI</th>
+                  <th>STOK</th>
+                  <th>KEDALUWARSA</th>
+                  <th>STATUS</th>
+                  <th>AKSI</th>
+                </tr>
+              </thead>
               <tbody id="product-table">
-                <tr><td colspan="6" class="empty-cell">Memuat data produk...</td></tr>
+                <tr>
+                  <td colspan="6" class="empty-cell">Memuat data produk...</td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <div class="table-footer"><span id="table-count">0 produk</span><span>Kelola stok kecantikanmu dengan mudah <b>✦</b></span></div>
+
+          <div class="table-footer">
+            <span id="table-count">0 produk</span>
+            <span>Kelola stok kecantikanmu dengan mudah <b>✦</b></span>
+          </div>
         </section>
       </section>
 
@@ -96,47 +176,81 @@
             <p class="eyebrow">PRODUCT MANAGEMENT</p>
             <h2>Tambahkan produk<br><em>ke koleksimu.</em></h2>
             <p>Catat detail kosmetik agar stok dan tanggal kedaluwarsa lebih mudah dipantau.</p>
-            <div class="form-tip"><span>✦</span><div><strong>Beauty tip</strong><p>Periksa tanggal kedaluwarsa secara berkala dan gunakan produk sesuai petunjuk kemasan.</p></div></div>
+
+            <div class="form-tip">
+              <span>✦</span>
+              <div>
+                <strong>Beauty tip</strong>
+                <p>Periksa tanggal kedaluwarsa secara berkala dan gunakan produk sesuai petunjuk kemasan.</p>
+              </div>
+            </div>
           </div>
+
           <section class="form-card">
-            <div class="form-card-heading"><span class="form-symbol">♡</span><div><h3 id="form-heading">Tambah Produk</h3><p>Isi detail produk kosmetik di bawah ini.</p></div></div>
+            <div class="form-card-heading">
+              <span class="form-symbol">♡</span>
+              <div>
+                <h3 id="form-heading">Tambah Produk</h3>
+                <p>Isi detail produk kosmetik di bawah ini.</p>
+              </div>
+            </div>
+
             <form id="product-form">
               <input type="hidden" id="product-id">
+
               <div class="field">
                 <label for="product-name">Nama Produk <span>*</span></label>
                 <input id="product-name" name="name" type="text" placeholder="Contoh: Serum Niacinamide" maxlength="120" required>
               </div>
+
               <div class="field">
                 <label for="product-category">Kategori <span>*</span></label>
                 <select id="product-category" name="category" required>
                   <option value="">Pilih kategori produk</option>
-                  <option>Skincare</option><option>Makeup</option><option>Body Care</option><option>Hair Care</option><option>Parfum</option><option>Lainnya</option>
+                  <option>Skincare</option>
+                  <option>Makeup</option>
+                  <option>Body Care</option>
+                  <option>Hair Care</option>
+                  <option>Parfum</option>
+                  <option>Lainnya</option>
                 </select>
               </div>
+
               <div class="form-row">
                 <div class="field">
                   <label for="product-quantity">Jumlah Stok <span>*</span></label>
                   <input id="product-quantity" name="quantity" type="number" min="0" step="1" placeholder="Mis. 5" required>
                 </div>
+
                 <div class="field">
                   <label for="product-expiry">Tanggal Kedaluwarsa <span>*</span></label>
                   <input id="product-expiry" name="expiry_date" type="date" required>
                 </div>
               </div>
+
               <p class="form-error" id="form-error" role="alert"></p>
+
               <div class="form-actions">
                 <button type="button" class="button button-ghost" id="cancel-edit">Batal</button>
-                <button type="submit" class="button button-primary" id="save-button">Simpan Produk <span>↗</span></button>
+                <button type="submit" class="button button-primary" id="save-button">
+                  Simpan Produk <span>↗</span>
+                </button>
               </div>
+
               <p class="required-note"><span>*</span> Wajib diisi</p>
             </form>
           </section>
         </div>
       </section>
-      <footer class="footer">Made with <span>♥</span> for your beauty collection</footer>
+
+      <footer class="footer">
+        Made with <span>♥</span> for your beauty collection
+      </footer>
     </main>
   </div>
+
   <div class="toast" id="toast" role="status"></div>
+
   <script src="script.js"></script>
 </body>
 </html>
