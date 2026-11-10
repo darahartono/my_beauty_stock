@@ -5,14 +5,14 @@ require_once 'auth.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
-// Fungsi untuk mengirim respons JSON
+// Fungsi respons JSON
 function respond(int $status, array $payload): void {
     http_response_code($status);
     echo json_encode($payload, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Periksa apakah admin sudah login
+// Periksa login admin
 if (!isLoggedIn()) {
     respond(401, [
         'success' => false,
@@ -20,34 +20,12 @@ if (!isLoggedIn()) {
     ]);
 }
 
-// Konfigurasi database
-$host = 'localhost';
-$dbname = 'my_beauty_stock';
-$username = 'root';
-$password = '';
-
-// Koneksi database
-try {
-    $pdo = new PDO(
-        "mysql:host={$host};dbname={$dbname};charset=utf8mb4",
-        $username,
-        $password,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ]
-    );
-} catch (PDOException $e) {
-    respond(500, [
-        'success' => false,
-        'message' => 'Tidak dapat terhubung ke database. Periksa MySQL dan konfigurasi api.php.'
-    ]);
-}
+// Menggunakan koneksi dari database.php
+require_once 'database.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
-// Mengambil seluruh data produk
+// MENGAMBIL SELURUH PRODUK
 if ($method === 'GET') {
     try {
         $stmt = $pdo->query(
@@ -60,7 +38,10 @@ if ($method === 'GET') {
             'success' => true,
             'data' => $stmt->fetchAll()
         ]);
+
     } catch (PDOException $e) {
+        error_log($e->getMessage());
+
         respond(500, [
             'success' => false,
             'message' => 'Gagal mengambil data produk.'
@@ -68,7 +49,7 @@ if ($method === 'GET') {
     }
 }
 
-// Hanya menerima GET dan POST
+// HANYA MENERIMA GET DAN POST
 if ($method !== 'POST') {
     header('Allow: GET, POST');
 
@@ -78,7 +59,7 @@ if ($method !== 'POST') {
     ]);
 }
 
-// Membaca data JSON
+// MEMBACA DATA JSON
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (!is_array($input)) {
@@ -97,10 +78,12 @@ try {
 
         $name = trim((string)($input['name'] ?? ''));
         $category = trim((string)($input['category'] ?? ''));
+
         $quantity = filter_var(
             $input['quantity'] ?? null,
             FILTER_VALIDATE_INT
         );
+
         $expiryDate = (string)($input['expiry_date'] ?? '');
 
         $allowedCategories = [
@@ -115,7 +98,7 @@ try {
         if ($name === '' || mb_strlen($name) > 120) {
             respond(422, [
                 'success' => false,
-                'message' => 'Nama produk wajib diisi (maksimal 120 karakter).'
+                'message' => 'Nama produk wajib diisi maksimal 120 karakter.'
             ]);
         }
 
@@ -252,7 +235,6 @@ try {
         ]);
     }
 
-    // AKSI TIDAK DIKENALI
     respond(400, [
         'success' => false,
         'message' => 'Aksi tidak dikenali.'
@@ -260,9 +242,10 @@ try {
 
 } catch (PDOException $e) {
 
+    error_log($e->getMessage());
+
     respond(500, [
         'success' => false,
         'message' => 'Terjadi kesalahan saat memproses data produk.'
     ]);
-
 }
